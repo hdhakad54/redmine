@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: database
+  labels:
+    app: redmine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redmine
+      tier: mysql
+  template:
+    metadata:
+      labels:
+        app: redmine
+        tier: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:5.6
+        ports:
+        - containerPort: 3306
+          name: sqlport
+        envFrom:
+        - configMapRef:
+            name: config-db
+        - secretRef:
+            name: secret-db 
+        volumeMounts:
+        - name: db-pvc
+          mountPath: /data/db
+      volumes:
+      - name: db-pvc
+        persistentVolumeClaim:
+          claimName: pvc

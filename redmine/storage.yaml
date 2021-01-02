@@ -1,0 +1,31 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+        name: redmine-pv
+        namespace: redmine
+        labels:
+                tier: frontend
+                type: local
+spec:
+        storageClassName: manual
+        capacity:
+                storage: 1Gi
+        accessModes:
+                - ReadWriteOnce
+        hostPath:
+                path: "/data/redmine"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+        name: redmine-pvc
+        namespace: redmine
+        labels:
+                tier: frontend
+spec:
+        storageClassName: manual
+        accessModes:
+                - ReadWriteOnce
+        resources:
+                requests:
+                        storage: 1Gi

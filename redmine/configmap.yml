@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-redmine
+  namespace: redmine
+data:
+  REDMINE_DB_MYSQL: "service-db.database"

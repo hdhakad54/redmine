@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redmine
+  namespace: redmine
+  labels:
+    app: redmine
+    tier: front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redmine
+      tier: front
+  template:
+    metadata:
+      labels:
+        app: redmine
+        tier: front
+    spec:
+
+      containers:
+      - name: redmine
+        image: redmine
+        ports:
+        - containerPort: 3000
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 300
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 330
+          periodSeconds: 10
+        envFrom:
+        - configMapRef:
+            name: config-redmine
+        - secretRef:
+            name: secret-redmine
+        volumeMounts:
+        - name: pvc
+          mountPath: /usr/src/redmine/file
+      volumes:
+      - name: pvc
+        persistentVolumeClaim:
+          claimName: redmine-pvc

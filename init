@@ -1,0 +1,15 @@
+terminationGracePeriodSeconds: 10
+      initContainers:
+      - name: chmod-er
+        image: busybox:latest
+        command:
+        - /bin/chown
+        - -R
+        - '999'
+        - /usr/src/redmine/config/
+        volumeMounts:
+        - name: pvc
+          mountPath: /usr/src/redmine/file
+        - name: pg-config
+          mountPath: /usr/src/redmine/config/routes.rb
+          subPath: routes.rb
